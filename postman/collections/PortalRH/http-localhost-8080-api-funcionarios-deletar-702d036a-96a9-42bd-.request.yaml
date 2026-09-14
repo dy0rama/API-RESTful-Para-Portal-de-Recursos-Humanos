@@ -1,0 +1,11 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/deletar/702d036a-96a9-42bd-bf2b-e7f4873317b1
+description: ""
+url: http://localhost:8080/api/funcionarios/deletar/702d036a-96a9-42bd-bf2b-e7f4873317b1
+method: DELETE
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+order: 4202949118873342

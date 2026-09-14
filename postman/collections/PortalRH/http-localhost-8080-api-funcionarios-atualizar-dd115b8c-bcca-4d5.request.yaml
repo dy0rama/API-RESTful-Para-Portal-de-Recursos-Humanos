@@ -1,0 +1,21 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/atualizar/dd115b8c-bcca-4d5c-a3ce-e28ed5bc881e
+description: ""
+url: http://localhost:8080/api/funcionarios/atualizar/dd115b8c-bcca-4d5c-a3ce-e28ed5bc881e
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"nome\": \"Leandro\",\r
+
+    \    \"cargo\": \"ANALISTA\",\r
+
+    \    \"role\": \"ROLE_USER\",\r
+
+    \    \"senha\": \"archetype\"\r
+
+    }"
+auth:
+  type: bearer
+order: 4114769236209683

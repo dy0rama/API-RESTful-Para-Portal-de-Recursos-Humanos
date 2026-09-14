@@ -1,0 +1,19 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/e1b33fae-a697-4dbf-8ce3-366182c29694/pontos/registrar
+description: ""
+url: http://localhost:8080/api/funcionarios/e1b33fae-a697-4dbf-8ce3-366182c29694/pontos/registrar
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"data\": \"2026-09-11\",\r
+
+    \    \"horarioEntrada\": \"08:30\",\r
+
+    \    \"horarioSaida\": \"17:45\"\r
+
+    }"
+auth:
+  type: bearer
+order: 4495165340049646

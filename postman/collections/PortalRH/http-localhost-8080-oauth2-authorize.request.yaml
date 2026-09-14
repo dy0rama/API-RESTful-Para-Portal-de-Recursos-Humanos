@@ -1,0 +1,23 @@
+$kind: http-request
+name: http://localhost:8080/oauth2/authorize
+description: ""
+url: http://localhost:8080/oauth2/authorize?response_type=code&client_id=portal-rh-client&scope=openid%20profile&redirect_uri=https://oauth.pstmn.io/v1/callback
+method: GET
+queryParams:
+  response_type: code
+  client_id: portal-rh-client
+  scope: openid%20profile
+  redirect_uri: https://oauth.pstmn.io/v1/callback
+auth:
+  type: oauth2
+  credentials:
+    addTokenTo: header
+    redirect_uri: https://oauth.pstmn.io/v1/callback
+    tokenName: Hotel OAuth2
+    grant_type: authorization_code_with_pkce
+    authUrl: http://localhost:8080/oauth2/authorize
+    accessTokenUrl: http://localhost:8080/oauth2/token
+    clientId: portal-rh-client
+    clientSecret: portal-rh-secret
+    useBrowser: false
+order: 4501072293659353

@@ -1,0 +1,8 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/d1cc97bf-f40c-4921-8529-466b74fdaca7/pontos/deletar/c3c5e9cd-7ea7-4501-a1dd-a37cf
+description: ""
+url: http://localhost:8080/api/funcionarios/d1cc97bf-f40c-4921-8529-466b74fdaca7/pontos/deletar/c3c5e9cd-7ea7-4501-a1dd-a37cf867ab8f
+method: DELETE
+auth:
+  type: bearer
+order: 4499571923998042

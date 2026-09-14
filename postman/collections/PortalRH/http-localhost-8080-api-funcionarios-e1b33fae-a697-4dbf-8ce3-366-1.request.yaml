@@ -1,0 +1,8 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/e1b33fae-a697-4dbf-8ce3-366182c29694/pontos/listar
+description: ""
+url: http://localhost:8080/api/funcionarios/e1b33fae-a697-4dbf-8ce3-366182c29694/pontos/listar
+method: GET
+auth:
+  type: bearer
+order: 4499638271372660

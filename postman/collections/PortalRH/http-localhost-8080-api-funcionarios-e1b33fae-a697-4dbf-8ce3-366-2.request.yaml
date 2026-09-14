@@ -1,0 +1,13 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/e1b33fae-a697-4dbf-8ce3-366182c29694/pontos/relatorio
+description: ""
+url: http://localhost:8080/api/funcionarios/e1b33fae-a697-4dbf-8ce3-366182c29694/pontos/relatorio?mes=9&ano=2026
+method: GET
+queryParams:
+  mes: "9"
+  ano: "2026"
+auth:
+  type: bearer
+  credentials:
+    token: eyJraWQiOiI5NGQ0MzEyNi0wMGJiLTQ2MWMtOTgyNS04YTVjY2I5Nzc2ZWIiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJDcmlzdGlhbmUiLCJhdWQiOiJwb3J0YWwtcmgtY2xpZW50IiwibmJmIjoxNzg5MzU2NzI4LCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNzg5MzU3MDI4LCJpYXQiOjE3ODkzNTY3MjgsImp0aSI6IjRkZjNmYzk4LTZiOWYtNDVkNS1iY2VlLTZmZjgyNDY3ZDhiZiJ9.h4VRqLHhXYJzy6_f_y3IQqdgecRdfrP-ftv2YFqZARjAs4TyUn_OONvhFsFZcLpmmiZld_Qr7o-CDQer85xDjH_fE_rOH4bxGOhysIptmtom_U3IVYHfRZekSCnAhh36fG2lkgrpubN27IRSZsBEfvkFDLYd4Xh-hbsApeB1SIITeck2TmkeGnzIRsYp7Xo3Q4k9AT2SBA-MdiBnJHfQ7hMbJltzgDvD4XANHwRUUEPFoEgBgY1-iQxD9R8DtnTr5jPv_4YrBMxEt9unrjFYvL1kx9BLn6hyWVTJ5fhvQcpDhpPmKOBe3Ok10puwCfA5iyeG8Lw4XSckRNeBjFQr7w
+order: 4502209370391241

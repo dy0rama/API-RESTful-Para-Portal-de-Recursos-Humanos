@@ -1,0 +1,8 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/buscar/dd115b8c-bcca-4d5c-a3ce-e28ed5bc881e
+description: ""
+url: http://localhost:8080/api/funcionarios/buscar/dd115b8c-bcca-4d5c-a3ce-e28ed5bc881e
+method: GET
+auth:
+  type: bearer
+order: 3719407467876746

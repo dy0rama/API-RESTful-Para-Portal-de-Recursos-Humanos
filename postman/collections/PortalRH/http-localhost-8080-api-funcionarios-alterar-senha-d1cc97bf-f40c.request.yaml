@@ -1,0 +1,17 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/alterar-senha/d1cc97bf-f40c-4921-8529-466b74fdaca7
+description: ""
+url: http://localhost:8080/api/funcionarios/alterar-senha/d1cc97bf-f40c-4921-8529-466b74fdaca7
+method: PATCH
+body:
+  type: json
+  content: "{\r
+
+    \    \"senhaAtual\": \"dy0rama\",\r
+
+    \    \"novaSenha\": \"dy0rama\"\r
+
+    }"
+auth:
+  type: bearer
+order: 4476884672777923

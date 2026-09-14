@@ -1,0 +1,23 @@
+$kind: http-request
+name: http://localhost:8080/api/funcionarios/registrar
+description: ""
+url: http://localhost:8080/api/funcionarios/registrar
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"nome\": \"Cristiane\",\r
+
+    \    \"cargo\": \"ASSISTENTE\",\r
+
+    \    \"role\": \"ROLE_USER\",\r
+
+    \    \"senha\": \"cris82\"\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: eyJraWQiOiI5MTU3ZThkYi0wYmQxLTQ3MTYtODFlMC1kODk1YzU1Yjg5MjkiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJSb2RyaWdvIiwiYXVkIjoicG9ydGFsLXJoLWNsaWVudCIsIm5iZiI6MTc4OTMzMDI0MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImV4cCI6MTc4OTMzMDU0MSwiaWF0IjoxNzg5MzMwMjQxLCJqdGkiOiI1YzYxZTUzMS1iNGRhLTRmZTAtYTI3Ny1jODg5NGVjMDQ4ZjEifQ.Bw3xqIVC9lgdYKbtY_LdTz3wlVyZxIjGci1xm2ZNFhb8qWdezjc9v8RNc8Ff1rFaZlOhsD-bBKeL8tl3N-ix0t3XcCh1Y5LlM7ybkVvM00tR93QWib-gbmpz63KOIgIaUzhuqhH1NmdxWFSSRXP5yLMcLmFhejEKzF92RvojWhukrsZpy7LFeqJSe8yxhPuqkF61uA3YkAtHKfnoLp7B8W0ckqlW89Ulquv2vKmu8p_TajCFU1JG8VGgdjyrN_n06W5L0yUZIvAkgPa3_I5cDmW1eGTPoMMr2JPo_Tu4eeMy8PRrqy8v7kJM0js6VQukOHSTj94SGPZKDAUb5jte_Q
+order: 1535934082639603
