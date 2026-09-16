@@ -1,6 +1,6 @@
 # 🏢 Portal de Recursos Humanos API
 
-API REST desenvolvida em **Java com Spring Boot** para simular um sistema de gerenciamento de Recursos Humanos, permitindo controlar funcionários, registros de ponto, horas trabalhadas, horas extras e relatórios mensais de jornada.
+API RESTful desenvolvida em **Java com Spring Boot** para simular um sistema de gerenciamento de Recursos Humanos, permitindo controlar funcionários, registros de ponto, horas trabalhadas, horas extras e relatórios mensais de jornada.
 
 O projeto foi desenvolvido com foco em **boas práticas de desenvolvimento backend**, separação de responsabilidades, validação de dados, tratamento centralizado de exceções, autenticação e autorização utilizando **OAuth 2.0 / OpenID Connect**, documentação com **Swagger/OpenAPI** e persistência de dados utilizando **PostgreSQL**.
 
