@@ -1,1600 +1,1640 @@
-# 🏢 Portal de Recursos Humanos
+# 🏨 Hotel Reservas API
 
-API REST desenvolvida com **Java e Spring Boot** para simular um sistema de gerenciamento de funcionários, registro de ponto, controle de jornada, horas extras e geração de relatórios mensais.
+API REST desenvolvida em **Java com Spring Boot** para gerenciamento de reservas de hotel, usuários e autenticação.
 
-O projeto foi desenvolvido com foco em **boas práticas de desenvolvimento de APIs REST**, separação de responsabilidades, aplicação de regras de negócio, persistência relacional, validação de dados, tratamento de exceções e autenticação/autorização utilizando **Spring Security e OAuth 2.0**.
+O projeto foi desenvolvido com foco na construção de uma aplicação backend organizada em camadas, aplicando conceitos de **REST, Spring Data JPA, PostgreSQL, DTOs, Mapper, Bean Validation, tratamento global de exceções e Spring Security com autenticação JWT**.
+
+Além das operações de CRUD, a aplicação implementa diferentes níveis de autorização por meio das roles `USER` e `ADMIN`, protegendo as operações de acordo com suas respectivas responsabilidades.
 
 ---
 
-## 📋 Sobre o projeto
+## 📌 Sobre o projeto
 
-O **Portal de Recursos Humanos** representa uma API para gerenciamento das principais informações relacionadas à jornada de trabalho de funcionários.
+O **Hotel Reservas API** simula o backend de um sistema de gerenciamento de reservas hoteleiras.
 
 A aplicação permite:
-    
-    * cadastrar funcionários;
-    * consultar funcionários;
-    * buscar um funcionário específico;
-    * atualizar dados de funcionários;
-    * alterar senha;
-    * excluir funcionários;
-    * registrar entrada e saída;
-    * consultar o histórico de ponto;
-    * excluir registros de ponto;
-    * calcular horas trabalhadas;
-    * calcular horas extras;
-    * aplicar limites de horas extras conforme o cargo;
-    * impedir registros de ponto para determinados cargos;
-    * gerar relatórios mensais de jornada;
-    * controlar acesso por nível de usuário;
-    * autenticar usuários utilizando OAuth 2.0;
-    * emitir tokens JWT;
-    * validar tokens JWT nas requisições protegidas;
-    * transportar as roles do usuário dentro do JWT;
-    * aplicar autorização baseada em roles e no próprio funcionário;
-    * retornar respostas padronizadas para erros da API.
 
-O projeto também utiliza **paginação** nas consultas de funcionários e registros de ponto.
+    * cadastrar e consultar reservas;
+    * atualizar reservas;
+    * excluir reservas;
+    * ordenar reservas pelo período de estadia;
+    * cadastrar usuários;
+    * consultar usuários;
+    * atualizar dados de usuários;
+    * alterar senhas;
+    * realizar reset administrativo de senha;
+    * remover usuários;
+    * autenticar usuários;
+    * proteger endpoints através de JWT;
+    * controlar permissões utilizando `USER` e `ADMIN`;
+    * validar dados recebidos pela API;
+    * retornar respostas padronizadas para erros.
+
+A aplicação utiliza **PostgreSQL** como banco de dados e **Spring Data JPA/Hibernate** para persistência.
 
 ---
 
-# 🎯 Objetivos
+# 🎯 Objetivos do projeto
 
-O principal objetivo do projeto é desenvolver uma API REST que simule um sistema de RH, permitindo aplicar na prática conceitos importantes do ecossistema Java/Spring.
+O projeto foi desenvolvido para consolidar conhecimentos de desenvolvimento backend utilizando Java e Spring Boot.
 
-Entre os principais objetivos técnicos estão:
+Entre os principais objetivos estão:
 
-    * desenvolver APIs REST utilizando Spring Boot;
+    * desenvolver uma API REST completa;
     * aplicar arquitetura em camadas;
+    * trabalhar com Spring Boot;
     * utilizar Spring Data JPA;
-    * trabalhar com PostgreSQL;
-    * utilizar UUID como identificador;
+    * integrar a aplicação com PostgreSQL;
+    * implementar autenticação com Spring Security;
+    * implementar autenticação baseada em JWT;
+    * trabalhar com autorização baseada em roles;
     * utilizar DTOs para entrada e saída de dados;
-    * implementar validações;
-    * aplicar regras de negócio na camada de serviço;
-    * trabalhar com relacionamentos JPA;
-    * implementar paginação;
-    * criar tratamento global de exceções;
-    * aplicar autenticação e autorização;
-    * implementar OAuth 2.0 Authorization Server;
-    * utilizar JWT para autenticação das APIs;
-    * implementar controle de acesso baseado em roles;
-    * proteger dados de um funcionário contra acesso indevido por outros usuários;
-    * desenvolver testes automatizados;
-    * organizar o projeto seguindo princípios de separação de responsabilidades.
+    * aplicar o padrão Mapper;
+    * utilizar Bean Validation;
+    * implementar tratamento global de exceções;
+    * utilizar UUID como identificador;
+    * utilizar `BigDecimal` para valores monetários;
+    * trabalhar com `enum`;
+    * documentar a API utilizando OpenAPI/Swagger;
+    * aplicar separação de responsabilidades;
+    * desenvolver regras de negócio independentes da camada HTTP.
 
 ---
 
 # 🛠️ Tecnologias utilizadas
 
-    | Tecnologia                  | Utilização                                      |
-    | --------------------------- | ----------------------------------------------- |
-    | Java 26                     | Linguagem principal                             |
-    | Spring Boot 4.1.1           | Framework principal                             |
-    | Spring Web MVC              | Desenvolvimento da API REST                     |
-    | Spring Data JPA             | Persistência e acesso ao banco                  |
-    | Hibernate                   | ORM                                             |
-    | PostgreSQL                  | Banco de dados relacional                       |
-    | Spring Validation           | Validação dos dados de entrada                  |
-    | Spring Security             | Segurança da aplicação                          |
-    | Spring Authorization Server | Implementação do OAuth 2.0 Authorization Server |
-    | JWT                         | Tokens de acesso                                |
-    | BCrypt                      | Criptografia de senhas                          |
-    | Maven                       | Gerenciamento de dependências e build           |
-    | Postman                     | Testes e validação das requisições HTTP         |
-    | JUnit                       | Testes automatizados                            |
-    | Mockito                     | Testes unitários com mocks                      |
+    | Tecnologia              | Utilização                              |
+    | ----------------------- | --------------------------------------- |
+    | Java 26                 | Linguagem principal                     |
+    | Spring Boot 4.1.1       | Framework principal                     |
+    | Spring Web MVC          | Construção da API REST                  |
+    | Spring Data JPA         | Persistência de dados                   |
+    | Hibernate               | ORM                                     |
+    | PostgreSQL              | Banco de dados                          |
+    | Spring Security         | Autenticação e autorização              |
+    | JWT                     | Autenticação baseada em tokens          |
+    | JJWT 0.13.0             | Criação e validação dos tokens JWT      |
+    | Bean Validation         | Validação dos dados                     |
+    | BCrypt                  | Hash das senhas                         |
+    | SpringDoc OpenAPI 3.1.1 | Documentação Swagger                    |
+    | Maven                   | Gerenciamento do projeto e dependências |
+    | UUID                    | Identificação dos recursos              |
 
 ---
 
 # 🏗️ Arquitetura
 
-A aplicação segue uma arquitetura em camadas, separando as responsabilidades de cada componente.
-
-```text
-    Controller
-        ↓
-    Service
-        ↓
-    Repository
-        ↓
-    Database
-```
-
-Além dessas camadas, o projeto possui estruturas específicas para:
-
-```text
-    Entities
-    Requests
-    Responses
-    Exceptions
-    Configurations
-    Security
-    Enums
-```
-
-Estrutura simplificada:
+O projeto utiliza uma arquitetura organizada por responsabilidades.
 
 ```text
     src
-    ├── main
-    │   ├── java
-    │   │   └── com.portal.recursos.humanos
-    │   │       ├── configurations
-    │   │       ├── controllers
-    │   │       ├── entities
-    │   │       ├── enums
-    │   │       ├── exceptions
-    │   │       ├── repositories
-    │   │       ├── requests
-    │   │       ├── responses
-    │   │       ├── security
-    │   │       └── services
-    │   │
-    │   └── resources
-    │       └── application.properties
-    │
-    └── test
-        └── java
+    └── main
+        ├── java
+        │   └── com.hotel.reservas
+        │       │
+        │       ├── configurations
+        │       ├── controllers
+        │       ├── dto
+        │       ├── entities
+        │       ├── enums
+        │       ├── exceptions
+        │       ├── mapper
+        │       ├── repositories
+        │       └── services
+        │
+        └── resources
+            └── application.properties
+```
+
+O fluxo principal de uma operação é:
+
+```text
+    Cliente
+       │
+       ▼
+    Controller
+       │
+       ▼
+    Service
+       │
+       ▼
+    Repository
+       │
+       ▼
+    PostgreSQL
+```
+
+Quando a requisição exige autenticação:
+
+```text
+    Cliente
+       │
+       │ Authorization: Bearer JWT
+       ▼
+    Spring Security
+       │
+       ▼
+    JwtAuthenticationFilter
+       │
+       ▼
+    JwtService
+       │
+       ▼
+    CustomUserDetailsService
+       │
+       ▼
+    PostgreSQL
+       │
+       ▼
+    SecurityContext
+       │
+       ▼
+    Authorization
+       │
+       ▼
+    Controller
+       │
+       ▼
+    Service
+       │
+       ▼
+    Repository
 ```
 
 ---
 
-# 📦 Estrutura das principais camadas
+# 📂 Organização das camadas
 
-## Controllers
+## `controllers`
 
-Responsáveis por receber as requisições HTTP e encaminhá-las para os serviços.
+Responsáveis pela camada HTTP da aplicação.
 
-Atualmente existem:
-    
-    * `FuncionarioController`
-    * `RegistroPontoController`
-    * `RelatorioHorasController`
+Recebem as requisições, validam os dados recebidos e encaminham as operações para os Services.
 
-Os controllers não concentram as regras de negócio. Essa responsabilidade pertence à camada de serviço.
-
----
-
-## Services
-
-Concentram as regras de negócio da aplicação.
-
-Principais serviços:
-
-### `FuncionarioService`
-
-Responsável pelo gerenciamento dos funcionários.
-
-Entre suas responsabilidades estão:
-
-    * cadastro;
-    * consulta;
-    * atualização;
-    * alteração de senha;
-    * exclusão;
-    * verificação de funcionário duplicado;
-    * criptografia de senha;
-    * impedimento da exclusão de funcionários que possuem registros de ponto;
-    * aplicação das regras de autorização.
-
-### `RegistroPontoService`
-
-Responsável pelo gerenciamento dos registros de ponto.
-
-Implementa regras como:
-
-    * funcionário deve existir;
-    * determinados cargos não batem ponto;
-    * horário de entrada mínimo;
-    * horário de saída máximo;
-    * saída deve ser posterior à entrada;
-    * não permitir dois registros para o mesmo funcionário no mesmo dia;
-    * calcular horas extras;
-    * limitar horas extras de acordo com o cargo;
-    * consultar histórico de ponto;
-    * excluir registros.
-
-### `RelatorioHorasService`
-
-Responsável pela geração do relatório mensal de jornada.
-
-O serviço:
-
-    1. verifica se o funcionário existe;
-    2. determina o período utilizando `YearMonth`;
-    3. obtém o primeiro e o último dia do mês;
-    4. consulta os registros do período;
-    5. soma as horas trabalhadas;
-    6. soma as horas extras;
-    7. contabiliza os dias trabalhados;
-    8. retorna um `RelatorioHorasResponse`.
-
----
-
-# 👤 Funcionários
-
-A entidade `Funcionario` representa os colaboradores cadastrados no sistema.
-
-Principais atributos:
+Controllers existentes:
 
 ```text
-    id
-    nome
-    cargo
-    role
-    senha
-```
-
-O identificador utiliza `UUID`.
-
-O nome é configurado como único no banco de dados.
-
-A senha não é armazenada em texto puro. Antes da persistência, ela passa pelo `PasswordEncoder`, utilizando BCrypt.
-
----
-
-# 🏷️ Cargos
-
-Os cargos disponíveis são definidos pelo enum `CargoFuncionario`.
-
-```java
-    GERENTE
-    COORDENADOR
-    ANALISTA
-    ASSISTENTE
-    ESTAGIARIO
-```
-
-Os cargos também participam diretamente das regras de negócio do registro de ponto.
-
----
-
-# 🔐 Níveis de acesso
-
-O projeto utiliza duas roles:
-
-```java
-    ROLE_ADMIN
-    ROLE_USER
-```
-
-### `ROLE_ADMIN`
-
-Possui permissões administrativas, incluindo operações como:
-
-    * cadastrar funcionários;
-    * listar funcionários;
-    * atualizar funcionários;
-    * excluir funcionários;
-    * excluir histórico de ponto;
-    * excluir registros individuais.
-
-### `ROLE_USER`
-
-Possui acesso restrito aos próprios dados, de acordo com as regras de segurança da aplicação.
-
-Um usuário comum não deve conseguir acessar ou modificar informações pertencentes a outro funcionário.
-
----
-
-# ⏱️ Registro de ponto
-
-A entidade `RegistroPonto` representa o registro diário de jornada.
-
-Relacionamento:
-
-```text
-    Funcionario 1 ───────── N RegistroPonto
-```
-
-Cada registro possui:
-
-```text
-    id
-    data
-    horarioEntrada
-    horarioSaida
-    funcionario
-```
-
-O relacionamento é implementado com:
-
-```java
-    @ManyToOne(fetch = FetchType.LAZY)
-```
-
-e:
-
-```java
-    @JoinColumn(name = "funcionario_id", nullable = false)
+    AuthController
+    ReservaController
+    UsuarioController
 ```
 
 ---
 
-# 📐 Regras de negócio do ponto
+## `services`
 
-Uma das partes mais importantes do projeto está na aplicação das regras de jornada.
+Concentram as operações e regras de negócio.
 
-## Horário mínimo de entrada
-
-O funcionário não pode registrar entrada antes das:
+Principais Services:
 
 ```text
-    06:00
+    AuthService
+    ReservaService
+    UsuarioService
+    JwtService
+    CustomUserDetailsService
+```
+
+A camada Service também é responsável por aplicar as regras de autorização específicas de cada operação.
+
+---
+
+## `repositories`
+
+Responsáveis pelo acesso aos dados utilizando Spring Data JPA.
+
+```text
+    ReservaRepository
+    UsuarioRepository
 ```
 
 ---
 
-## Horário máximo de saída
+## `entities`
 
-O horário de saída não pode ultrapassar:
+Representam as entidades persistidas no banco de dados.
 
 ```text
-    22:00
+    Reserva
+    Usuario
 ```
 
 ---
 
-## Saída posterior à entrada
+## `dto`
 
-O sistema verifica se:
+Define os objetos utilizados na comunicação entre cliente e API.
+
+### Reservas
 
 ```text
-    horarioSaida > horarioEntrada
+    ReservaRequestDTO
+    ReservaResponseDTO
 ```
 
-Registros inválidos são rejeitados.
-
----
-
-## Intervalo para almoço
-
-A aplicação considera automaticamente:
+### Usuários
 
 ```text
-    1 hora de almoço
+    CriarUsuarioDTO
+    UsuarioRequestDTO
+    UsuarioResponseDTO
 ```
 
-O cálculo é realizado subtraindo uma hora do intervalo entre entrada e saída.
-
-Exemplo:
+### Autenticação
 
 ```text
-    Entrada:  08:00
-    Saída:    18:00
-    
-    Tempo total: 10 horas
-    Almoço:      1 hora
-    -------------------
-    Trabalhado:  9 horas
+    LoginRequestDTO
+    LoginResponseDTO
 ```
 
----
-
-# 🕐 Jornada padrão
-
-A jornada padrão utilizada pelo sistema é:
+### Senhas
 
 ```text
-    8 horas por dia
-```
-
-Quando o funcionário trabalha além das oito horas, o excedente é considerado hora extra.
-
-Exemplo:
-
-```text
-    Horas trabalhadas: 9h
-    Jornada padrão:    8h
-    
-    Horas extras:      1h
+    AlterarSenhaDTO
+    ResetarSenhaDTO
 ```
 
 ---
 
-# 📊 Limite de horas extras
+## `mapper`
 
-O sistema também aplica limites diferentes conforme o cargo.
-
-### Analista
-
-Máximo:
+Responsável pela conversão entre DTOs e entidades.
 
 ```text
-    3 horas extras por dia
-```
-
-### Assistente
-
-Máximo:
-
-```text
-    3 horas extras por dia
-```
-
-### Coordenador
-
-Máximo:
-
-```text
-    5 horas extras por dia
-```
-
-Os cargos que não possuem essa regra específica não recebem o mesmo limite.
-
----
-
-# 🚫 Funcionários que não batem ponto
-
-Determinados cargos não podem registrar ponto.
-
-Atualmente:
-
-```text
-    GERENTE
-    ESTAGIARIO
-```
-
-Quando um funcionário desses cargos tenta registrar um ponto, a aplicação lança uma exceção específica:
-
-```text
-    FuncionarioNaoBatePontoException
-```
-
----
-
-# 🔁 Registro duplicado
-
-O sistema impede que o mesmo funcionário tenha mais de um registro de ponto na mesma data.
-
-A verificação é realizada diretamente pelo repository:
-
-```java
-    existsByFuncionarioIdAndData(...)
-```
-
-Caso já exista um registro para aquele dia, a operação é rejeitada.
-
----
-
-# 📑 Relatório mensal de horas
-
-A API também possui um recurso para geração de relatório mensal.
-
-Endpoint:
-
-```http
-    GET /api/funcionarios/{funcionarioId}/pontos/relatorio?mes=9&ano=2026
-```
-
-O relatório contém:
-
-```text
-    funcionarioId
-    nomeFuncionario
-    mes
-    ano
-    diasTrabalhados
-    horasTrabalhadas
-    horasExtras
+    ReservaMapper
+    UsuarioMapper
 ```
 
 Exemplo conceitual:
 
+```text
+    ReservaRequestDTO
+           │
+           ▼
+    ReservaMapper
+           │
+           ▼
+    Reserva
+```
+
+E no retorno:
+
+```text
+    Reserva
+       │
+       ▼
+    ReservaMapper
+       │
+       ▼
+    ReservaResponseDTO
+```
+
+Essa abordagem evita que os Controllers e Services fiquem responsáveis por conversões repetitivas.
+
+---
+
+# 🏨 Modelo de Reserva
+
+A entidade `Reserva` representa uma reserva realizada no hotel.
+
+Principais atributos:
+
+```text
+    UUID id
+    String nomeHospede
+    TipoDeQuarto tipoDeQuarto
+    int diasDeEstadia
+    BigDecimal valorDiaria
+```
+
+---
+
+## 💰 Cálculo do valor total
+
+A entidade possui uma regra para calcular o valor total da reserva:
+
+```text
+    valorTotal = valorDiaria × diasDeEstadia
+```
+
+Exemplo:
+
+```text
+    Diária: R$ 250,00
+    Estadia: 5 dias
+    
+    Total:
+    250 × 5 = R$ 1.250,00
+```
+
+O cálculo utiliza `BigDecimal`, apropriado para representar valores monetários.
+
+---
+
+# 🛏️ Tipos de quarto
+
+Os tipos de quarto são representados através de `enum`.
+
+```java
+    STANDARD
+    LUXO
+    PRESIDENCIAL
+```
+
+Isso evita que valores arbitrários sejam enviados para o campo de tipo de quarto.
+
+Exemplo válido:
+
 ```json
     {
-      "funcionarioId": "UUID",
-      "nomeFuncionario": "João da Silva",
-      "mes": 9,
-      "ano": 2026,
-      "diasTrabalhados": 20,
-      "horasTrabalhadas": "PT160H",
-      "horasExtras": "PT12H"
+      "nomeHospede": "João da Silva",
+      "tipoDeQuarto": "STANDARD",
+      "diasDeEstadia": 5,
+      "valorDiaria": 250.00
     }
 ```
 
-O período é calculado utilizando `YearMonth`, permitindo determinar corretamente o primeiro e o último dia de cada mês.
-
 ---
 
-# 📄 DTOs
+# 👤 Usuários
 
-A aplicação utiliza objetos específicos para entrada e saída de dados.
-
-## Requests
-
-### `FuncionarioRequest`
-
-Utilizado para receber:
+A entidade `Usuario` possui:
 
 ```text
-    nome
-    cargo
-    role
-    senha
+    UUID id
+    String email
+    String senha
+    Role role
 ```
 
-Possui validações como:
+O e-mail é único no banco de dados.
 
-    * nome obrigatório;
-    * cargo obrigatório;
-    * role obrigatória;
-    * senha obrigatória;
-    * senha com pelo menos 6 caracteres.
+As roles disponíveis são:
 
-### `RegistroPontoRequest`
-
-Recebe:
-
-```text
-    data
-    horarioEntrada
-    horarioSaida
-```
-
-Todos os campos são obrigatórios.
-
-### `AtualizarSenhaRequest`
-
-Utilizado para alteração segura da senha.
-
----
-
-# 📤 Responses
-
-As entidades não são expostas diretamente nas respostas principais da API.
-
-São utilizados DTOs como:
-
-```text
-    FuncionarioResponse
-    RegistroPontoResponse
-    RelatorioHorasResponse
-```
-
-Essa abordagem evita acoplamento direto entre a estrutura de persistência e o contrato da API.
-
----
-
-# 📄 Paginação
-
-As consultas de funcionários e registros de ponto utilizam paginação através do Spring Data.
-
-Funcionários:
-
-```http
-    GET /api/funcionarios/listar
-```
-
-Configuração padrão:
-
-```text
-    size = 8
-    sort = nome
-```
-
-Registros de ponto:
-
-```http
-    GET /api/funcionarios/{funcionarioId}/pontos/listar
-```
-
-Configuração padrão:
-
-```text
-    size = 5
-    sort = data
-    direction = DESC
-```
-
-A paginação é realizada utilizando `Pageable`, `Page` e `@PageableDefault`.
-
-Isso evita retornar grandes quantidades de registros de uma única vez.
-
----
-
-# 🌐 Endpoints
-
-## Funcionários
-
-### Cadastrar funcionário
-
-```http
-    POST /api/funcionarios/registrar
-```
-
-Resposta:
-
-```text
-    201 Created
+```java
+    USER
+    ADMIN
 ```
 
 ---
 
-### Listar funcionários
+# 🔐 Autenticação
 
-```http
-    GET /api/funcionarios/listar
-```
+A autenticação da aplicação é realizada através de **JWT — JSON Web Token**.
 
-Resposta:
+O fluxo de login é:
 
 ```text
-    200 OK
+    E-mail + senha
+          │
+          ▼
+    AuthenticationManager
+          │
+          ▼
+    DaoAuthenticationProvider
+          │
+          ▼
+    CustomUserDetailsService
+          │
+          ▼
+    PostgreSQL
+          │
+          ▼
+    PasswordEncoder / BCrypt
+          │
+          ▼
+    Usuário autenticado
+          │
+          ▼
+    JwtService
+          │
+          ▼
+    JWT
 ```
 
-Retorna uma página de funcionários.
-
----
-
-### Buscar funcionário
-
-```http
-    GET /api/funcionarios/buscar/{id}
-```
-
-Resposta:
-
-```text
-    200 OK
-```
-
----
-
-### Atualizar funcionário
-
-```http
-    PUT /api/funcionarios/atualizar/{id}
-```
-
-Resposta:
-
-```text
-    200 OK
-```
-
----
-
-### Alterar senha
-
-```http
-    PATCH /api/funcionarios/alterar-senha/{id}
-```
-
-Resposta:
-
-```text
-    200 OK
-```
-
----
-
-### Excluir funcionário
-
-```http
-    DELETE /api/funcionarios/deletar/{id}
-```
-
-Resposta:
-
-```text
-    204 No Content
-```
-
-A exclusão é bloqueada quando existem registros de ponto associados ao funcionário.
-
----
-
-# ⏰ Endpoints de ponto
-
-## Registrar ponto
-
-```http
-    POST /api/funcionarios/{funcionarioId}/pontos/registrar
-```
-
-Resposta:
-
-```text
-    201 Created
-```
-
----
-
-## Listar pontos
-
-```http
-    GET /api/funcionarios/{funcionarioId}/pontos/listar
-```
-
-Resposta:
-
-```text
-    200 OK
-```
-
-Utiliza paginação.
-
----
-
-## Excluir histórico de ponto
-
-```http
-    DELETE /api/funcionarios/{funcionarioId}/pontos/deletar
-```
-
-Resposta:
-
-```text
-    204 No Content
-```
-
-Operação administrativa.
-
----
-
-## Excluir registro específico
-
-```http
-    DELETE /api/funcionarios/{funcionarioId}/pontos/deletar/{registroId}
-```
-
-Resposta:
-
-```text
-    204 No Content
-```
-
-Operação administrativa.
-
----
-
-# 📊 Endpoint de relatório
-
-## Relatório mensal
-
-```http
-    GET /api/funcionarios/{funcionarioId}/pontos/relatorio?mes=9&ano=2026
-```
-
-Resposta:
-
-```text
-    200 OK
-```
-
-O relatório consolida os registros do funcionário no mês solicitado.
-
----
-
-# 🔒 Segurança
-
-A segurança da aplicação utiliza **Spring Security** em conjunto com **Spring Authorization Server**.
-
-O projeto possui dois fluxos relacionados:
-
-```text
-    OAuth 2.0 Authorization Server
-                ↓
-              JWT
-                ↓
-    Resource Server / API
-                ↓
-    Autorização
-```
-
----
-
-# 🔑 OAuth 2.0 Authorization Server
-
-A aplicação possui um Authorization Server responsável por emitir tokens.
-
-O cliente configurado é:
-
-```text
-    Client ID:
-    portal-rh-client
-```
-
-O segredo configurado para o cliente é:
-
-```text
-    portal-rh-secret
-```
-
-O projeto utiliza:
-
-```text
-    Authorization Code
-    Refresh Token
-    PKCE
-```
-
-O cliente exige Proof Key for Code Exchange:
-
-```text
-    requireProofKey = true
-```
-
-O redirect URI configurado para os testes com Postman é:
-
-```text
-    https://oauth.pstmn.io/v1/callback
-```
-
----
-
-# 🎫 JWT
-
-Após a autenticação, o Authorization Server emite um JWT.
-
-Além das informações padrão do token, o projeto adiciona as roles do usuário através de um `OAuth2TokenCustomizer`.
+Após o login, o cliente recebe um token.
 
 Exemplo:
 
 ```json
     {
-      "sub": "Administrador",
-      "aud": "portal-rh-client",
-      "roles": [
-        "ROLE_ADMIN"
-      ],
-      "iss": "http://localhost:8080"
+      "token": "eyJ..."
     }
 ```
 
-A API utiliza essas informações para determinar as permissões do usuário.
-
----
-
-# 🛡️ Resource Server
-
-A API funciona como Resource Server e valida os tokens JWT recebidos.
-
-As requisições protegidas devem utilizar:
+Esse token deve ser enviado nas próximas requisições:
 
 ```http
-    Authorization: Bearer <token>
+    Authorization: Bearer eyJ...
 ```
 
-O `JwtAuthenticationConverter` transforma as roles presentes no claim:
+---
+
+# 🔑 JWT
+
+O projeto utiliza a biblioteca **JJWT 0.13.0** para criação e validação dos tokens.
+
+O token contém informações como:
 
 ```text
-    roles
+    subject → e-mail do usuário
+    role    → role do usuário
+    issuedAt
+    expiration
 ```
 
-em autoridades do Spring Security.
+O `JwtService` é responsável por:
 
-Dessa forma:
+    * gerar tokens;
+    * extrair claims;
+    * extrair o e-mail;
+    * validar o token;
+    * verificar sua assinatura;
+    * verificar sua validade temporal.
+
+---
+
+# 🛡️ JWT + consulta ao banco
+
+Um detalhe importante da implementação é que a aplicação não utiliza exclusivamente a role armazenada no token para definir as permissões.
+
+Quando o JWT chega:
+
+```text
+    JWT
+     │
+     ▼
+    extrai e-mail
+     │
+     ▼
+    CustomUserDetailsService
+     │
+     ▼
+    busca usuário no PostgreSQL
+     │
+     ▼
+    obtém role atual
+     │
+     ▼
+    SecurityContext
+```
+
+Dessa forma, a aplicação consulta o estado atual do usuário no banco.
+
+Por exemplo, se determinado usuário possuía:
 
 ```text
     ROLE_ADMIN
 ```
 
-e:
+e posteriormente sua role foi alterada no banco para:
 
 ```text
     ROLE_USER
 ```
 
-passam a ser reconhecidas pelo mecanismo de autorização.
+as próximas autenticações construídas pelo filtro utilizarão a autoridade atual encontrada no banco.
+
+Isso permite que as regras de autorização estejam relacionadas ao estado atual do usuário.
 
 ---
 
-# 👮 Controle de acesso
+# 🔒 Proteção de senhas
 
-Além da autorização baseada em role, o projeto possui uma camada específica chamada `FuncionarioSecurity`.
+As senhas não são armazenadas em texto puro.
 
-Ela verifica se um usuário comum está tentando acessar dados pertencentes a ele próprio.
+A aplicação utiliza:
 
-Conceitualmente:
-
-```text
-    ROLE_ADMIN
-        ↓
-    pode acessar dados de funcionários
-    
-    ROLE_USER
-        ↓
-    pode acessar seus próprios dados
-        ↓
-    não pode acessar dados de outro funcionário
-```
-
-Isso permite separar:
-
-* regras de negócio;
-* autenticação;
-* autorização;
-* controle de propriedade dos dados.
-
----
-
-# 🔐 Criptografia de senhas
-
-As senhas são protegidas utilizando:
-
-```text
+```java
     BCryptPasswordEncoder
 ```
 
-A senha recebida no cadastro não é armazenada diretamente.
+através da abstração:
+
+```java
+    PasswordEncoder
+```
 
 Fluxo:
 
 ```text
-    Senha recebida
-          ↓
-    PasswordEncoder
-          ↓
-    BCrypt
-          ↓
-    Senha criptografada
-          ↓
+    Senha
+      │
+      ▼
+    BCryptPasswordEncoder
+      │
+      ▼
+    Hash
+      │
+      ▼
     PostgreSQL
 ```
 
-Durante a alteração da senha, a aplicação também verifica a senha atual antes de permitir a substituição.
+Durante a autenticação, o Spring Security compara a senha informada com o hash armazenado.
 
 ---
 
-# ⚠️ Tratamento global de exceções
+# 👥 Autorização
 
-A aplicação possui um `GlobalExceptionHandler` implementado com `@RestControllerAdvice`.
-
-Dessa forma, exceções de negócio são convertidas em respostas HTTP padronizadas.
-
-Entre as exceções implementadas estão:
-
-    * `FuncionarioNaoEncontradoException`
-    * `FuncionarioJaCadastradoException`
-    * `FuncionarioComRegistroPontoException`
-    * `FuncionarioNaoBatePontoException`
-    * `RegistroPontoDuplicadoException`
-    * `RegistroPontoNaoEncontradoException`
-    * `RegistroPontoFuncionarioIncompativelException`
-    * `HorarioInvalidoException`
-    * `HoraExtraExcedidaException`
-    * `OperacaoNaoAutorizadaException`
-    * `SenhaAtualIncorretaException`
-
----
-
-# 📦 Resposta padronizada de erro
-
-Os erros de negócio são representados pelo `ErrorResponse`.
-
-A estrutura contém informações como:
-
-```json
-    {
-      "timestamp": "2026-09-14T00:00:00",
-      "status": 404,
-      "error": "Not Found",
-      "message": "Funcionário não encontrado com ID: ..."
-    }
-```
-
-Isso proporciona um contrato consistente para os clientes da API.
-
----
-
-# 🗄️ Banco de dados
-
-O projeto utiliza **PostgreSQL**.
-
-A configuração do banco não está diretamente exposta no código.
-
-São utilizadas variáveis de ambiente:
+A aplicação utiliza duas roles:
 
 ```text
-    DB_URL
-    DB_USERNAME
-    DB_PASSWORD
+    USER
+    ADMIN
 ```
 
-Configuração:
+As operações possuem permissões diferentes.
 
-```properties
-    spring.datasource.url=${DB_URL}
-    spring.datasource.username=${DB_USERNAME}
-    spring.datasource.password=${DB_PASSWORD}
-```
+## USER
 
-Essa abordagem evita deixar credenciais diretamente no código-fonte.
+Pode:
+
+    * autenticar-se;
+    * consultar reservas;
+    * consultar usuários;
+    * alterar seus próprios dados permitidos;
+    * alterar sua própria senha.
+
+## ADMIN
+
+Além das operações disponíveis ao usuário comum, pode:
+
+    * criar reservas;
+    * atualizar reservas;
+    * excluir reservas;
+    * cadastrar usuários;
+    * alterar dados de outros usuários;
+    * resetar senhas;
+    * remover usuários.
 
 ---
 
-# 🧩 Persistência
+# 🛡️ Regras específicas de autorização
 
-A camada de persistência utiliza:
+O projeto separa regras de autorização genéricas do fluxo de negócio.
 
-```text
-    Spring Data JPA
-    +
-    Hibernate
-    +
-    PostgreSQL
-```
+### `AdministradorSecurity`
 
-Os principais repositories são:
-
-```text
-    FuncionarioRepository
-    RegistroPontoRepository
-```
-
-O Spring Data permite utilizar métodos derivados, como:
-
-```java
-    findByNome(...)
-    existsByNome(...)
-    existsByFuncionarioIdAndData(...)
-    findByFuncionarioId(...)
-    findByFuncionarioIdAndDataBetween(...)
-```
-
-Sem a necessidade de escrever manualmente consultas SQL para essas operações.
-
----
-
-# 🔗 Relacionamento entre entidades
-
-O relacionamento principal é:
-
-```text
-    Funcionario
-         │
-         │ 1
-         │
-         │ N
-         ▼
-    RegistroPonto
-```
-
-Um funcionário pode possuir vários registros de ponto.
-
-Cada registro de ponto pertence obrigatoriamente a um funcionário.
-
----
-
-# 🧪 Testes
-
-O projeto foi desenvolvido seguindo uma abordagem incremental, com testes sendo utilizados durante a implementação das regras de negócio e dos endpoints.
-
-A estratégia inclui testes para:
-
-    * cadastro de funcionários;
-    * listagem;
-    * busca;
-    * atualização;
-    * exclusão;
-    * funcionários inexistentes;
-    * registros de ponto;
-    * horários inválidos;
-    * cargos que não batem ponto;
-    * registros duplicados;
-    * limites de horas extras;
-    * cálculo de horas trabalhadas;
-    * cálculo de horas extras;
-    * consulta paginada;
-    * histórico de ponto;
-    * relatórios mensais;
-    * regras de autorização;
-    * autenticação.
-
-O projeto utiliza principalmente:
-
-```text
-    JUnit
-    Mockito
-    Spring Boot Test
-```
-
----
-
-# 📮 Postman
-
-O projeto possui uma estrutura de arquivos do Postman para facilitar a execução e validação dos endpoints.
-
-As requisições incluem operações relacionadas a:
-
-```text
-    Funcionários
-    Registro de ponto
-    Autenticação OAuth2
-    JWKS
-    Atualização de senha
-```
-
-O fluxo OAuth2 pode ser testado utilizando o Authorization Code com PKCE através do Postman.
-
----
-
-# ⚙️ Configuração do ambiente
-
-## Pré-requisitos
-
-Antes de executar o projeto, é necessário ter instalado:
-
-    * Java 26;
-    * Maven, caso não seja utilizado o Maven Wrapper;
-    * PostgreSQL;
-    * Postman, caso queira testar manualmente as requisições.
-
----
-
-# 🗃️ Configuração do PostgreSQL
-
-Crie um banco de dados para o projeto.
-
-Por exemplo:
-
-```sql
-    CREATE DATABASE portal_rh;
-```
-
-Depois configure as variáveis de ambiente:
-
-```text
-    DB_URL=jdbc:postgresql://localhost:5432/portal_rh
-    DB_USERNAME=seu_usuario
-    DB_PASSWORD=sua_senha
-```
-
-Os valores devem ser configurados de acordo com o ambiente local.
-
----
-
-# ▶️ Executando o projeto
-
-O projeto possui Maven Wrapper.
-
-No Windows:
-
-```bash
-    mvnw.cmd spring-boot:run
-```
-
-No Linux/macOS:
-
-```bash
-    ./mvnw spring-boot:run
-```
-
-Ou utilizando Maven instalado:
-
-```bash
-    mvn spring-boot:run
-```
-
-A aplicação será iniciada por padrão em:
-
-```text
-    http://localhost:8080
-```
-
----
-
-# 🔐 Fluxo de autenticação
-
-O fluxo simplificado para acessar os endpoints protegidos é:
-
-```text
-    1. Cliente solicita autorização
-              ↓
-    2. Authorization Server
-              ↓
-    3. Login do usuário
-              ↓
-    4. Authorization Code
-              ↓
-    5. Token Endpoint
-              ↓
-    6. Access Token JWT
-              ↓
-    7. Requisição para a API
-              ↓
-    8. Bearer Token
-              ↓
-    9. Validação do JWT
-              ↓
-    10. Verificação da role/permissão
-              ↓
-    11. Acesso ao recurso
-```
-
----
-
-# 📡 Exemplo de requisição
-
-Depois de obter um token:
-
-```http
-    GET http://localhost:8080/api/funcionarios/listar
-    Authorization: Bearer SEU_ACCESS_TOKEN
-```
-
-Um usuário com:
+É responsável por verificar se o usuário possui:
 
 ```text
     ROLE_ADMIN
 ```
 
-pode acessar a listagem.
+Exemplo utilizado:
 
-Um usuário com:
-
-```text
-    ROLE_USER
+```java
+    @PreAuthorize("""
+    @administradorsecurity.somenteAdmin(
+        authentication,
+        'Somente administradores podem criar reservas.'
+    )""")
 ```
 
-recebe:
+---
+
+### `UsuarioSecurity`
+
+É utilizado para verificar se o usuário pode alterar determinado usuário.
+
+A regra é:
 
 ```text
+    ADMIN
+      │
+      └── pode alterar outros usuários
+    
+    USER
+      │
+      └── pode alterar somente os próprios dados
+```
+
+---
+
+# 🚫 Regra adicional para exclusão de usuários
+
+Existe uma regra específica para impedir que um administrador exclua a própria conta.
+
+Exemplo:
+
+```text
+    Administrador autenticado
+            │
+            ▼
+    Tenta excluir a própria conta
+            │
+            ▼
+    OperacaoNaoPermitidaException
+```
+
+Isso evita que o administrador remova a própria conta através dessa operação administrativa.
+
+---
+
+# 📋 API REST
+
+## 🔑 Autenticação
+
+### Login
+
+```http
+    POST /auth/login
+```
+
+Autentica o usuário e retorna um JWT.
+
+### Request
+
+```json
+    {
+      "email": "admin@email.com",
+      "senha": "senha"
+    }
+```
+
+### Response
+
+```json
+    {
+      "token": "eyJ..."
+    }
+```
+
+---
+
+# 🏨 Reservas
+
+Base:
+
+```text
+    /api/v1/reservas
+```
+
+---
+
+## Criar reserva
+
+```http
+    POST /api/v1/reservas
+```
+
+**Permissão:** `ADMIN`
+
+### Request
+
+```json
+    {
+      "nomeHospede": "João da Silva",
+      "tipoDeQuarto": "STANDARD",
+      "diasDeEstadia": 5,
+      "valorDiaria": 250.00
+    }
+```
+
+### Response
+
+```json
+    {
+      "idReserva": "UUID",
+      "nomeHospede": "João da Silva",
+      "tipoDeQuarto": "STANDARD",
+      "diasDeEstadia": 5,
+      "valorDiaria": 250.00
+    }
+```
+
+### Status
+
+```text
+    201 Created
+    400 Bad Request
+    401 Unauthorized
     403 Forbidden
 ```
 
-quando não possui autorização para a operação.
+---
 
-Uma requisição sem autenticação recebe:
+## Listar reservas
+
+```http
+    GET /api/v1/reservas
+```
+
+**Permissão:** `USER` ou `ADMIN`
+
+As reservas são retornadas em ordem decrescente de dias de estadia.
+
+Exemplo:
 
 ```text
+    7 dias
+    5 dias
+    4 dias
+    3 dias
+    1 dia
+```
+
+### Status
+
+```text
+    200 OK
     401 Unauthorized
 ```
 
 ---
 
-# 🧠 Principais conceitos aplicados
+## Buscar reserva por ID
 
-Este projeto reúne diversos conceitos importantes do desenvolvimento backend com Java:
+```http
+    GET /api/v1/reservas/{id}
+```
+
+**Permissão:** `USER` ou `ADMIN`
+
+### Status
+
+```text
+    200 OK
+    400 Bad Request
+    401 Unauthorized
+    404 Not Found
+```
+
+---
+
+## Atualizar reserva
+
+```http
+    PUT /api/v1/reservas/{id}
+```
+
+**Permissão:** `ADMIN`
+
+### Status
+
+```text
+    200 OK
+    400 Bad Request
+    401 Unauthorized
+    403 Forbidden
+    404 Not Found
+```
+
+---
+
+## Excluir reserva
+
+```http
+    DELETE /api/v1/reservas/{id}
+```
+
+**Permissão:** `ADMIN`
+
+### Status
+
+```text
+    204 No Content
+    401 Unauthorized
+    403 Forbidden
+    404 Not Found
+```
+
+---
+
+# 👥 Usuários
+
+Base:
+
+```text
+    /api/usuarios
+```
+
+---
+
+## Cadastrar usuário
+
+```http
+    POST /api/usuarios
+```
+
+**Permissão:** `ADMIN`
+
+O e-mail deve ser único.
+
+### Status
+
+```text
+    201 Created
+    400 Bad Request
+    401 Unauthorized
+    403 Forbidden
+    409 Conflict
+```
+
+---
+
+## Listar usuários
+
+```http
+    GET /api/usuarios
+```
+
+**Permissão:** usuário autenticado.
+
+Retorna os usuários cadastrados utilizando `UsuarioResponseDTO`.
+
+---
+
+## Buscar usuário
+
+```http
+    GET /api/usuarios/{id}
+```
+
+**Permissão:** usuário autenticado.
+
+### Status
+
+```text
+    200 OK
+    401 Unauthorized
+    404 Not Found
+```
+
+---
+
+## Atualizar usuário
+
+```http
+    PUT /api/usuarios/{id}
+```
+
+A autorização é definida de acordo com o usuário autenticado:
+
+```text
+    ADMIN → pode atualizar outros usuários
+    
+    USER → pode atualizar somente a própria conta
+```
+
+Também existe validação para impedir duplicidade de e-mail.
+
+---
+
+## Alterar senha
+
+```http
+    PATCH /api/usuarios/{id}/alterar-senha
+```
+
+O usuário precisa informar a senha atual.
+
+Fluxo:
+
+```text
+    Senha atual
+         │
+         ▼
+    PasswordEncoder.matches()
+         │
+         ├── incorreta → erro
+         │
+         └── correta
+               │
+               ▼
+         Nova senha
+               │
+               ▼
+         BCrypt
+               │
+               ▼
+         PostgreSQL
+```
+
+---
+
+## Resetar senha
+
+```http
+    PATCH /api/usuarios/{id}/resetar-senha
+```
+
+**Permissão:** `ADMIN`
+
+O administrador pode definir uma nova senha para outro usuário.
+
+A nova senha é armazenada utilizando BCrypt.
+
+---
+
+## Remover usuário
+
+```http
+    DELETE /api/usuarios/{id}
+```
+
+**Permissão:** `ADMIN`
+
+Existe uma regra adicional:
+
+```text
+    ADMIN não pode remover a própria conta.
+```
+
+Em caso de tentativa, a aplicação lança:
+
+```text
+    OperacaoNaoPermitidaException
+```
+
+---
+
+# 📊 Matriz de autorização
+
+    | Endpoint                                 |       USER      | ADMIN |
+    | ---------------------------------------- | :-------------: | :---: |
+    | `POST /auth/login`                       |        ✅        |   ✅   |
+    | `POST /api/v1/reservas`                  |        ❌        |   ✅   |
+    | `GET /api/v1/reservas`                   |        ✅        |   ✅   |
+    | `GET /api/v1/reservas/{id}`              |        ✅        |   ✅   |
+    | `PUT /api/v1/reservas/{id}`              |        ❌        |   ✅   |
+    | `DELETE /api/v1/reservas/{id}`           |        ❌        |   ✅   |
+    | `POST /api/usuarios`                     |        ❌        |   ✅   |
+    | `GET /api/usuarios`                      |        ✅        |   ✅   |
+    | `GET /api/usuarios/{id}`                 |        ✅        |   ✅   |
+    | `PUT /api/usuarios/{id}`                 | Próprio usuário |   ✅   |
+    | `PATCH /api/usuarios/{id}/alterar-senha` | Próprio usuário |   ✅   |
+    | `PATCH /api/usuarios/{id}/resetar-senha` |        ❌        |   ✅   |
+    | `DELETE /api/usuarios/{id}`              |        ❌        |   ✅   |
+
+---
+
+# ✅ Validação
+
+A API utiliza **Jakarta Bean Validation**.
+
+Exemplos:
+
+```java
+    @NotBlank
+    private String nomeHospede;
+```
+
+```java
+    @NotNull
+    @Min(1)
+    private int diasDeEstadia;
+```
+
+```java
+    @NotNull
+    @DecimalMin("0.01")
+    private BigDecimal valorDiaria;
+```
+
+Para usuários e autenticação também são aplicadas validações relacionadas aos dados recebidos.
+
+A validação ocorre antes da execução da operação de negócio.
+
+Fluxo:
+
+```text
+    Request
+       │
+       ▼
+    Bean Validation
+       │
+       ├── inválido → 400
+       │
+       └── válido
+            │
+            ▼
+         Service
+```
+
+---
+
+# ⚠️ Tratamento global de exceções
+
+A aplicação possui um `GlobalExceptionHandler` utilizando:
+
+```java
+    @RestControllerAdvice
+```
+
+Isso centraliza o tratamento de exceções.
+
+Entre as exceções específicas utilizadas estão:
+
+```text
+    ReservaNaoEncontradaException
+    UsuarioNaoEncontradoException
+    EmailJaCadastradoException
+    SenhaAtualIncorretaException
+    OperacaoNaoPermitidaException
+```
+
+---
+
+# 📄 Resposta padronizada de erro
+
+Os erros são representados através de:
+
+```text
+    ErrorResponse
+```
+
+A estrutura contém informações como:
+
+```text
+    timestamp
+    status
+    error
+    message
+    path
+```
+
+Exemplo:
+
+```json
+    {
+      "timestamp": "2026-09-16T01:00:00",
+      "status": 404,
+      "error": "Not Found",
+      "message": "Reserva não encontrada com ID: ...",
+      "path": "/api/v1/reservas/..."
+    }
+```
+
+---
+
+# 🔢 UUID
+
+As entidades utilizam UUID como identificador.
+
+Exemplo:
+
+```text
+    550e8400-e29b-41d4-a716-446655440000
+```
+
+A utilização de UUID evita a exposição direta de identificadores numéricos sequenciais.
+
+---
+
+# 💵 BigDecimal
+
+Valores monetários utilizam:
+
+```java
+    BigDecimal
+```
+
+em vez de `double`.
+
+Exemplo:
+
+```java
+    private BigDecimal valorDiaria;
+```
+
+Essa escolha é adequada para operações financeiras porque permite maior controle sobre precisão decimal.
+
+---
+
+# 🗄️ Banco de dados
+
+O projeto utiliza:
+
+```text
+    PostgreSQL
+```
+
+A persistência é realizada através de:
+
+```text
+    Spring Data JPA
+            +
+    Hibernate
+```
+
+As principais tabelas são:
+
+```text
+    usuarios
+    reservas
+```
+
+---
+
+# ⚙️ Configuração
+
+As informações de conexão com o banco e a chave JWT são obtidas através de variáveis de ambiente.
+
+Exemplo:
+
+```properties
+    spring.datasource.url=${DB_URL}
+    spring.datasource.username=${DB_USERNAME}
+    spring.datasource.password=${DB_PASSWORD}
+    
+    jwt.secret=${JWT_SECRET}
+    jwt.expiration=3600000
+```
+
+Isso evita colocar credenciais diretamente no código-fonte.
+
+---
+
+# 🔐 Variáveis de ambiente
+
+Antes de executar a aplicação, configure:
+
+```text
+    DB_URL
+    DB_USERNAME
+    DB_PASSWORD
+    JWT_SECRET
+```
+
+Exemplo conceitual:
+
+```text
+    DB_URL=jdbc:postgresql://localhost:5432/hotel_reservas
+    DB_USERNAME=postgres
+    DB_PASSWORD=sua_senha
+    JWT_SECRET=sua_chave_secreta
+```
+
+> Não versione senhas, chaves JWT ou outras credenciais no repositório.
+
+---
+
+# 📖 Swagger / OpenAPI
+
+A API possui documentação através do **SpringDoc OpenAPI**.
+
+A configuração define:
+
+```text
+    Título:
+    Hotel Reservations API
+    
+    Versão:
+    1.0
+    
+    Autenticação:
+    Bearer JWT
+```
+
+O esquema de segurança utilizado é:
+
+```text
+    bearerAuth
+```
+
+---
+
+## Swagger UI
+
+Com a aplicação executando localmente:
+
+```text
+    http://localhost:8080/swagger-ui/index.html
+```
+
+A documentação OpenAPI pode ser acessada através de:
+
+```text
+    http://localhost:8080/v3/api-docs
+```
+
+No Swagger, os endpoints protegidos podem utilizar o botão **Authorize** para informar o JWT.
+
+Formato:
+
+```text
+    Bearer <TOKEN>
+```
+
+---
+
+# 🔄 Fluxo completo de autenticação
+
+```text
+                        ┌───────────────┐
+                        │    Cliente    │
+                        └───────┬───────┘
+                                │
+                                │ POST /auth/login
+                                ▼
+                        ┌───────────────┐
+                        │ AuthController│
+                        └───────┬───────┘
+                                │
+                                ▼
+                          AuthService
+                                │
+                                ▼
+                     AuthenticationManager
+                                │
+                                ▼
+                    DaoAuthenticationProvider
+                                │
+                                ▼
+                   CustomUserDetailsService
+                                │
+                                ▼
+                           PostgreSQL
+                                │
+                                ▼
+                         PasswordEncoder
+                                │
+                                ▼
+                           JwtService
+                                │
+                                ▼
+                              JWT
+                                │
+                                ▼
+                        ┌───────────────┐
+                        │    Cliente    │
+                        └───────┬───────┘
+                                │
+                      Authorization: Bearer
+                                │
+                                ▼
+                     JwtAuthenticationFilter
+                                │
+                                ▼
+                          JwtService
+                                │
+                                ▼
+                   CustomUserDetailsService
+                                │
+                                ▼
+                        SecurityContext
+                                │
+                                ▼
+                        @PreAuthorize
+                                │
+                                ▼
+                           Controller
+```
+
+---
+
+# 🧪 Testes
+
+O projeto possui estrutura de testes integrada ao Maven e às ferramentas de teste do ecossistema Spring Boot.
+
+Os testes podem ser executados utilizando:
+
+```bash
+    ./mvnw test
+```
+
+No Windows:
+
+```bash
+    mvnw.cmd test
+```
+
+Para gerar o build:
+
+```bash
+    ./mvnw clean package
+```
+
+---
+
+# ▶️ Como executar o projeto
+
+## Pré-requisitos
+
+É necessário possuir:
+    
+    * Java 26;
+    * Maven ou Maven Wrapper;
+    * PostgreSQL;
+    * Git;
+    * IDE de sua preferência.
+
+---
+
+## 1. Clonar o projeto
+
+```bash
+    git clone URL_DO_REPOSITORIO
+```
+
+Depois:
+
+```bash
+    cd hotel-reservas
+```
+
+---
+
+## 2. Criar o banco PostgreSQL
+
+Exemplo:
+
+```sql
+    CREATE DATABASE hotel_reservas;
+```
+
+---
+
+## 3. Configurar as variáveis de ambiente
+
+Configure:
+
+```text
+    DB_URL
+    DB_USERNAME
+    DB_PASSWORD
+    JWT_SECRET
+```
+
+---
+
+## 4. Executar a aplicação
+
+Linux/macOS:
+
+```bash
+    ./mvnw spring-boot:run
+```
+
+Windows:
+
+```bash
+    mvnw.cmd spring-boot:run
+```
+
+Ou execute:
+
+```text
+    HotelReservasApplication
+```
+
+diretamente pela IDE.
+
+---
+
+# 🔎 Exemplo de utilização
+
+## 1. Login
+
+```http
+    POST /auth/login
+    Content-Type: application/json
+```
+
+```json
+    {
+      "email": "admin@email.com",
+      "senha": "senha"
+    }
+```
+
+A aplicação retorna:
+
+```json
+    {
+      "token": "eyJ..."
+    }
+```
+
+---
+
+## 2. Utilizar o token
+
+```http
+    GET /api/v1/reservas
+    Authorization: Bearer eyJ...
+```
+
+---
+
+## 3. Criar uma reserva
+
+```http
+    POST /api/v1/reservas
+    Authorization: Bearer eyJ...
+    Content-Type: application/json
+```
+
+```json
+    {
+      "nomeHospede": "Maria Oliveira",
+      "tipoDeQuarto": "LUXO",
+      "diasDeEstadia": 4,
+      "valorDiaria": 450.00
+    }
+```
+
+---
+
+# 📐 Princípios aplicados
+
+O projeto busca aplicar princípios importantes de desenvolvimento backend.
+
+## Separation of Concerns
+
+Cada camada possui uma responsabilidade:
+
+```text
+    Controller
+    → HTTP
+    
+    Service
+    → Regras de negócio
+    
+    Repository
+    → Persistência
+    
+    Mapper
+    → Conversão entre objetos
+    
+    DTO
+    → Contrato da API
+    
+    Configuration
+    → Configurações e segurança
+    
+    Exception Handler
+    → Tratamento de erros
+```
+
+---
+
+## Dependency Injection
+
+As dependências são fornecidas pelo Spring através de injeção de dependências.
+
+Exemplo:
+
+```java
+    public ReservaService(
+            ReservaRepository reservaRepository,
+            ReservaMapper reservaMapper) {
+    
+        this.reservaRepository = reservaRepository;
+        this.reservaMapper = reservaMapper;
+    }
+```
+
+---
+
+## Baixo acoplamento
+
+A utilização de DTOs, Mappers, Services e Repositories reduz o acoplamento entre as diferentes partes da aplicação.
+
+---
+
+# 📚 Conhecimentos demonstrados
+
+Este projeto reúne conhecimentos relacionados a:
 
 ### Java
 
-    * Classes e objetos;
-    * Records;
-    * Enums;
+    * Programação Orientada a Objetos;
+    * classes;
+    * interfaces;
+    * enums;
     * UUID;
-    * `Duration`;
-    * `LocalDate`;
-    * `LocalTime`;
-    * `YearMonth`;
-    * Streams;
-    * Optional;
-    * exceções customizadas.
+    * BigDecimal;
+    * Records;
+    * tratamento de exceções.
 
 ### Spring Boot
 
-    * Injeção de dependência;
-    * Beans;
+    * configuração;
+    * injeção de dependências;
     * Controllers;
     * Services;
-    * Repositories;
-    * configuração por annotations;
-    * validação;
-    * tratamento global de exceções.
+    * Beans;
+    * configuração da aplicação.
+
+### Spring Web
+
+    * APIs REST;
+    * HTTP methods;
+    * `ResponseEntity`;
+    * status codes;
+    * `@RequestBody`;
+    * `@PathVariable`;
+    * validação de requisições.
 
 ### Spring Data JPA
 
-    * Entidades;
-    * `@Id`;
-    * geração de UUID;
-    * `@ManyToOne`;
-    * `FetchType.LAZY`;
-    * `@JoinColumn`;
+    * entidades;
     * repositories;
-    * queries derivadas;
-    * paginação.
+    * `JpaRepository`;
+    * consultas derivadas;
+    * persistência.
 
 ### Spring Security
 
     * autenticação;
     * autorização;
     * roles;
+    * `Authentication`;
+    * `SecurityContext`;
     * `@PreAuthorize`;
-    * `UserDetailsService`;
     * `DaoAuthenticationProvider`;
     * `PasswordEncoder`;
     * BCrypt;
-    * JWT;
-    * Resource Server.
+    * filtros de segurança.
 
-### OAuth 2.0
+### JWT
 
-    * Authorization Server;
-    * Authorization Code;
-    * Refresh Token;
-    * PKCE;
-    * Client ID;
-    * Client Secret;
-    * Redirect URI;
-    * JWT Access Token;
-    * JWK/JWKS.
+    * geração de tokens;
+    * claims;
+    * assinatura;
+    * expiração;
+    * validação;
+    * autenticação stateless.
 
----
+### API Design
 
-# 🧱 Princípios e boas práticas utilizados
-
-O projeto procura manter uma separação clara entre as responsabilidades.
-
-### Controller
-
-Responsável pela comunicação HTTP.
-
-### Service
-
-Responsável pelas regras de negócio.
-
-### Repository
-
-Responsável pela persistência.
-
-### Entity
-
-Representa os dados persistidos.
-
-### Request
-
-Representa os dados recebidos pela API.
-
-### Response
-
-Define os dados retornados pela API.
-
-### Security
-
-Concentra regras relacionadas a autenticação e autorização.
-
-### Exception
-
-Centraliza as exceções específicas da aplicação.
-
-Essa divisão facilita:
-
-    * manutenção;
-    * testes;
-    * evolução;
-    * reutilização;
-    * compreensão do código;
-    * redução de acoplamento.
+    * DTOs;
+    * Mapper;
+    * tratamento global de exceções;
+    * respostas HTTP;
+    * documentação OpenAPI;
+    * separação de responsabilidades.
 
 ---
 
-# 📈 Evolução do projeto
+# 🚀 Possíveis evoluções
 
-O projeto foi construído de forma incremental.
+O projeto pode ser expandido futuramente com funcionalidades como:
 
-A implementação seguiu uma sequência semelhante a:
+    * testes unitários mais abrangentes;
+    * testes de integração;
+    * testes de segurança;
+    * Docker;
+    * Docker Compose;
+    * CI/CD;
+    * paginação;
+    * filtros de reservas;
+    * cadastro de quartos;
+    * controle de disponibilidade;
+    * check-in;
+    * check-out;
+    * cancelamento de reservas;
+    * datas de entrada e saída;
+    * auditoria;
+    * logs estruturados;
+    * refresh tokens;
+    * revogação de tokens;
+    * integração com serviços externos;
+    * deploy em ambiente cloud.
+
+Essas funcionalidades representam possíveis extensões e não fazem parte da implementação atual.
+
+---
+
+# 🎓 Objetivo de aprendizado
+
+O projeto foi desenvolvido como uma aplicação prática para consolidar conhecimentos de desenvolvimento backend com Java e Spring Boot.
+
+A proposta evolui de um CRUD tradicional para uma API que incorpora diferentes conceitos encontrados em aplicações reais:
 
 ```text
-    Configuração inicial
-            ↓
-    Entidade Funcionário
-            ↓
-    Repository
-            ↓
-    Service
-            ↓
-    Controller
-            ↓
-    DTOs
-            ↓
-    Validações
-            ↓
-    Registro de ponto
-            ↓
-    Regras de jornada
-            ↓
-    Horas extras
-            ↓
-    Paginação
-            ↓
-    Tratamento de exceções
-            ↓
-    Relatórios
-            ↓
-    Spring Security
-            ↓
-    OAuth 2.0
-            ↓
-    JWT
-            ↓
-    Controle de autorização
+    CRUD
+     │
+     ├── Spring Boot
+     │
+     ├── Spring Data JPA
+     │
+     ├── PostgreSQL
+     │
+     ├── DTOs
+     │
+     ├── Mapper
+     │
+     ├── Bean Validation
+     │
+     ├── Exception Handling
+     │
+     ├── Spring Security
+     │
+     ├── BCrypt
+     │
+     ├── JWT
+     │
+     ├── Roles
+     │
+     ├── Authorization
+     │
+     └── OpenAPI / Swagger
 ```
 
-Essa abordagem permitiu implementar e validar cada camada antes de adicionar novos níveis de complexidade.
-
----
-
-# 🚀 Possíveis evoluções futuras
-
-Embora o projeto já possua uma estrutura completa para uma API de estudo e portfólio, algumas funcionalidades podem ser adicionadas futuramente.
-
-## 📧 Identificação por e-mail
-
-Adicionar e-mail ao funcionário e utilizá-lo como identificador de login, evitando utilizar o nome como username.
-
----
-
-## ✏️ Edição de registros de ponto
-
-Adicionar:
-
-```http
-    PUT /api/funcionarios/{funcionarioId}/pontos/{registroId}
-```
-
-com regras específicas para alteração de registros.
-
----
-
-## 🏖️ Férias
-
-Implementar um módulo para:
-
-    * solicitação de férias;
-    * aprovação;
-    * períodos;
-    * histórico;
-    * validação de conflitos.
-
----
-
-## 📝 Auditoria
-
-Registrar:
-
-    * usuário responsável;
-    * operação realizada;
-    * data/hora;
-    * recurso alterado;
-    * informações relevantes da operação.
-
----
-
-## 📚 Documentação com OpenAPI
-
-Adicionar Swagger/OpenAPI para documentar:
-
-    * endpoints;
-    * parâmetros;
-    * requests;
-    * responses;
-    * códigos HTTP;
-    * autenticação.
-
----
-
-## 🐳 Docker
-
-Containerizar:
-
-```text
-    API
-    PostgreSQL
-```
-
-permitindo executar o ambiente completo com Docker Compose.
-
----
-
-## 🧪 Testcontainers
-
-Utilizar containers reais para testes de integração com PostgreSQL, reduzindo a diferença entre o ambiente de teste e o banco utilizado em produção.
-
----
-
-# ⚠️ Considerações sobre o projeto
-
-Este projeto foi desenvolvido principalmente como **projeto de estudo e portfólio**, tendo como objetivo demonstrar conhecimentos de desenvolvimento backend com Java e Spring.
-
-Algumas configurações, como o cliente OAuth2 armazenado em memória e a geração da chave RSA durante a execução, são adequadas para o ambiente de desenvolvimento/estudo, mas deveriam ser revistas em um ambiente produtivo.
-
-Em uma aplicação real, seria recomendável utilizar:
-
-    * armazenamento persistente dos clientes OAuth2;
-    * gerenciamento seguro de secrets;
-    * chaves RSA persistentes e protegidas;
-    * HTTPS;
-    * gerenciamento adequado de sessões/tokens;
-    * logs e auditoria;
-    * monitoramento;
-    * configurações separadas por ambiente;
-    * infraestrutura de produção.
-
----
-
-# 📁 Principais pacotes
-
-```text
-    com.portal.recursos.humanos
-    │
-    ├── configurations
-    │   ├── AuthorizationServerConfiguration
-    │   ├── EncoderConfiguration
-    │   └── SecurityConfiguration
-    │
-    ├── controllers
-    │   ├── FuncionarioController
-    │   ├── RegistroPontoController
-    │   └── RelatorioHorasController
-    │
-    ├── entities
-    │   ├── Funcionario
-    │   └── RegistroPonto
-    │
-    ├── enums
-    │   ├── CargoFuncionario
-    │   └── NivelDeAcesso
-    │
-    ├── exceptions
-    │   ├── ErrorResponse
-    │   ├── GlobalExceptionHandler
-    │   └── exceções de negócio
-    │
-    ├── repositories
-    │   ├── FuncionarioRepository
-    │   └── RegistroPontoRepository
-    │
-    ├── requests
-    │   ├── AtualizarSenhaRequest
-    │   ├── FuncionarioRequest
-    │   └── RegistroPontoRequest
-    │
-    ├── responses
-    │   ├── FuncionarioResponse
-    │   ├── RegistroPontoResponse
-    │   └── RelatorioHorasResponse
-    │
-    ├── security
-    │   ├── AdministradorSecurity
-    │   ├── CustomAuthenticationEntryPoint
-    │   └── FuncionarioSecurity
-    │
-    └── services
-        ├── CustomUserDetailsService
-        ├── FuncionarioService
-        ├── RegistroPontoService
-        └── RelatorioHorasService
-```
-
----
-
-# 📌 Resumo dos recursos
-
-    | Recurso                            | Implementado |
-    | ---------------------------------- | :----------: |
-    | CRUD de funcionários               |       ✅      |
-    | UUID                               |       ✅      |
-    | PostgreSQL                         |       ✅      |
-    | Spring Data JPA                    |       ✅      |
-    | DTOs                               |       ✅      |
-    | Bean Validation                    |       ✅      |
-    | Registro de ponto                  |       ✅      |
-    | Regras de jornada                  |       ✅      |
-    | Intervalo de almoço                |       ✅      |
-    | Cálculo de horas trabalhadas       |       ✅      |
-    | Cálculo de horas extras            |       ✅      |
-    | Limite de horas extras por cargo   |       ✅      |
-    | Bloqueio de ponto por cargo        |       ✅      |
-    | Registro duplicado                 |       ✅      |
-    | Paginação                          |       ✅      |
-    | Relatório mensal de horas          |       ✅      |
-    | Exceções customizadas              |       ✅      |
-    | Global Exception Handler           |       ✅      |
-    | BCrypt                             |       ✅      |
-    | Spring Security                    |       ✅      |
-    | Roles ADMIN/USER                   |       ✅      |
-    | Controle de acesso por funcionário |       ✅      |
-    | OAuth 2.0 Authorization Server     |       ✅      |
-    | Authorization Code                 |       ✅      |
-    | Refresh Token                      |       ✅      |
-    | PKCE                               |       ✅      |
-    | JWT                                |       ✅      |
-    | JWT com roles                      |       ✅      |
-    | Resource Server                    |       ✅      |
-    | Postman                            |       ✅      |
+O resultado é uma API REST estruturada em camadas, com autenticação, autorização, persistência relacional, validação e documentação.
 
 ---
 
@@ -1602,14 +1642,10 @@ Em uma aplicação real, seria recomendável utilizar:
 
 **Rodrigo Marques Viana**
 
-Projeto desenvolvido para estudo, prática e demonstração de conhecimentos em desenvolvimento backend com **Java, Spring Boot, Spring Security, OAuth 2.0, JWT, JPA e PostgreSQL**.
+Projeto desenvolvido para estudo, prática e consolidação de conhecimentos em desenvolvimento backend utilizando **Java, Spring Boot, Spring Security, JPA e PostgreSQL**.
 
 ---
 
-# ⭐ Considerações finais
+# 📄 Licença
 
-O **Portal de Recursos Humanos** foi desenvolvido para representar uma API backend próxima de um cenário real, indo além de operações básicas de CRUD.
-
-O projeto combina **persistência, regras de negócio, validações, paginação, tratamento de exceções, segurança, autenticação OAuth 2.0, JWT e autorização baseada em roles**, proporcionando uma aplicação com diferentes níveis de complexidade.
-
-Além de demonstrar conhecimento das principais ferramentas do ecossistema Spring, o projeto também evidencia uma preocupação com **organização arquitetural, separação de responsabilidades, segurança e evolução incremental da aplicação**.
+Projeto desenvolvido para fins de estudo e aprendizado.
