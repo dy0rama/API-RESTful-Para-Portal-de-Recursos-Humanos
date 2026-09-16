@@ -64,6 +64,7 @@ public class AuthorizationServerConfiguration {
                 .authorizationGrantType(
                         AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
+                .redirectUri("http://localhost:8080/swagger-ui/oauth2-redirect.html")
                 .scope("openid")
                 .scope("profile")
                 .clientSettings(
